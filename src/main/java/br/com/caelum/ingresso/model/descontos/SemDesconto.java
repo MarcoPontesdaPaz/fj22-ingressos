@@ -11,4 +11,9 @@ public class SemDesconto implements Desconto {
 		
 	}
 	
+	@Override
+	public String getDescricao(){
+		return "Normal";
+	}
+	
 }

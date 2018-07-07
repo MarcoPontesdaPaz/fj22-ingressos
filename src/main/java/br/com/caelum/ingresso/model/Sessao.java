@@ -5,11 +5,17 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Sessao {
@@ -26,6 +32,9 @@ public class Sessao {
 		private Filme filme;
 		
 		BigDecimal preco = BigDecimal.ZERO;
+		
+		@OneToMany(mappedBy = "sessao", fetch = FetchType.EAGER)
+		private Set<Ingresso> ingressos = new HashSet<>();
 		
 		/**
 		 * @deprecated hibernate only
@@ -51,6 +60,17 @@ public class Sessao {
 			
 			//return this.horario.plusMinutes(getFilme().getDuracao().toMinutes());
 		}
+		
+		public Map<String, List<Lugar>> getMapaDeLugares(){
+			return sala.getMapaDeLugares();
+		}
+		
+		
+		public boolean isDisponivel(Lugar lugarSelecionado){
+			return ingressos.stream().map(Ingresso::getLugar).noneMatch(lugar -> lugar.equals(lugarSelecionado));
+		}
+		
+		
 		
 		public void setId (Integer id){
 			this.id = id;
